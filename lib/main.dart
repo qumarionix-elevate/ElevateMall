@@ -65,17 +65,14 @@ final List<MallBrand> kBrands = [
   const MallBrand(id: 'decathlon', name: 'Decathlon', accentColor: Color(0xFF0066B3)),
 ];
 
-// Stores per brand – in production load from API (100+ stores)
+// One store per brand (single Giva, Allen Solly, etc.)
 final List<Store> kStores = [
-  const Store(id: '75949441186', name: 'Giva Main', brandId: 'giva', location: 'Ground Floor'),
-  const Store(id: '75949441187', name: 'Giva West', brandId: 'giva', location: 'West Wing'),
-  const Store(id: 'as_01', name: 'Allen Solly Store 1', brandId: 'allen_solly', location: 'Level 1'),
-  const Store(id: 'as_02', name: 'Allen Solly Store 2', brandId: 'allen_solly', location: 'Level 2'),
-  const Store(id: 'lp_01', name: 'LP Store', brandId: 'lp', location: 'Level 1'),
-  const Store(id: 'sb_01', name: 'Starbucks Café', brandId: 'starbucks', location: 'Food Court'),
-  const Store(id: 'sb_02', name: 'Starbucks Kiosk', brandId: 'starbucks', location: 'Atrium'),
-  const Store(id: 'vh_01', name: 'Van Heusen', brandId: 'van_heusen', location: 'Level 1'),
-  const Store(id: 'dec_01', name: 'Decathlon', brandId: 'decathlon', location: 'Annex'),
+  const Store(id: '75949441186', name: 'Giva', brandId: 'giva', location: null),
+  const Store(id: 'as_01', name: 'Allen Solly', brandId: 'allen_solly', location: null),
+  const Store(id: 'lp_01', name: 'LP', brandId: 'lp', location: null),
+  const Store(id: 'sb_01', name: 'Starbucks', brandId: 'starbucks', location: null),
+  const Store(id: 'vh_01', name: 'Van Heusen', brandId: 'van_heusen', location: null),
+  const Store(id: 'dec_01', name: 'Decathlon', brandId: 'decathlon', location: null),
 ];
 
 List<Store> storesForBrand(String brandId) =>
@@ -190,20 +187,35 @@ Future<List<PosTransaction>> fetchPosTransactions({
       .toList();
 }
 
-// --- Design tokens (rich, modern jewellery-inspired palette) ---
+// --- Design tokens (Marina Mall logo–matched: blues, teal, accent splashes) ---
 abstract class AppColors {
-  static const background = Color(0xFF0D1117);
-  static const surface = Color(0xFF161B22);
-  static const surfaceElevated = Color(0xFF21262D);
-  static const border = Color(0xFF30363D);
-  static const borderLight = Color(0xFF484F58);
-  static const gold = Color(0xFFD4A853);
-  static const goldMuted = Color(0xFFB8860B);
-  static const emerald = Color(0xFF10B981);
-  static const amber = Color(0xFFF59E0B);
-  static const textPrimary = Color(0xFFF0F6FC);
-  static const textSecondary = Color(0xFF8B949E);
-  static const textMuted = Color(0xFF6E7681);
+  // Base: light, clean (logo-consistent)
+  static const background = Color(0xFFF0F6F8);
+  static const surface = Color(0xFFFFFFFF);
+  static const surfaceElevated = Color(0xFFFAFCFD);
+  static const surfaceOverlay = Color(0xFFF5F9FB);
+  static const border = Color(0xFFDDE8ED);
+  static const borderLight = Color(0xFFE8EEF2);
+  // App bar: logo primary (cyan → teal wave)
+  static const appBarStart = Color(0xFF58C4DA);
+  static const appBarEnd = Color(0xFF307FBB);
+  static const appBarOnSurface = Color(0xFFFFFFFF);
+  // Logo accent / splash colors
+  static const gold = Color(0xFF307FBB);
+  static const goldMuted = Color(0xFF2580A8);
+  static const goldTint = Color(0xFFE8F6F9);
+  static const emerald = Color(0xFF88BD2C);
+  static const amber = Color(0xFFF08339);
+  static const accentRed = Color(0xFFEE4646);
+  static const slate = Color(0xFF444444);
+  static const indigo = Color(0xFF61B7CB);
+  // Floor/location badge
+  static const floorBadge = Color(0xFFE0F2F6);
+  static const floorBadgeText = Color(0xFF2D5A6B);
+  // Text (logo charcoal)
+  static const textPrimary = Color(0xFF444444);
+  static const textSecondary = Color(0xFF5C6B73);
+  static const textMuted = Color(0xFF6B7C85);
 }
 
 class RetailIntelligenceApp extends StatelessWidget {
@@ -212,44 +224,46 @@ class RetailIntelligenceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Elevate Mall · Intelligence',
+      title: 'The Marina Mall · Intelligence',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         scaffoldBackgroundColor: AppColors.background,
-        colorScheme: ColorScheme.dark(
-          primary: AppColors.gold,
+        colorScheme: ColorScheme.light(
+          primary: AppColors.appBarStart,
           surface: AppColors.surface,
           onSurface: AppColors.textPrimary,
           onSurfaceVariant: AppColors.textSecondary,
           outline: AppColors.border,
         ),
         textTheme: GoogleFonts.plusJakartaSansTextTheme(
-          ThemeData.dark().textTheme,
+          ThemeData.light().textTheme,
         ).apply(
           bodyColor: AppColors.textPrimary,
           displayColor: AppColors.textPrimary,
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.appBarStart,
+          foregroundColor: AppColors.appBarOnSurface,
           elevation: 0,
-          scrolledUnderElevation: 0,
+          scrolledUnderElevation: 2,
           centerTitle: false,
           titleTextStyle: GoogleFonts.plusJakartaSans(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+            color: AppColors.appBarOnSurface,
             letterSpacing: -0.3,
           ),
-          iconTheme: const IconThemeData(color: AppColors.textPrimary, size: 24),
+          iconTheme: const IconThemeData(color: AppColors.appBarOnSurface, size: 24),
         ),
         cardTheme: CardThemeData(
           color: AppColors.surface,
-          elevation: 0,
+          elevation: 1,
+          shadowColor: const Color(0x1A1A1D24),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: AppColors.border, width: 0.5),
+            side: const BorderSide(color: AppColors.borderLight, width: 0.5),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -260,6 +274,74 @@ class RetailIntelligenceApp extends StatelessWidget {
         ),
       ),
       home: const IntelligenceDashboard(),
+    );
+  }
+}
+
+// --- Mall background: subtle shapes (Marina logo–matching blues/teal) ---
+class _MallBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    // Soft orbs in logo cyan/teal (low opacity)
+    final orbs = [
+      (Offset(w * 0.85, h * 0.08), 180.0, const Color(0xFF58C4DA), 0.06),
+      (Offset(w * 0.12, h * 0.25), 220.0, const Color(0xFF61B7CB), 0.05),
+      (Offset(w * 0.92, h * 0.55), 160.0, const Color(0xFF307FBB), 0.04),
+      (Offset(w * 0.05, h * 0.72), 200.0, const Color(0xFF58C4DA), 0.05),
+      (Offset(w * 0.5, h * 0.92), 240.0, const Color(0xFFE0F2F6), 0.05),
+    ];
+    for (final o in orbs) {
+      final paint = Paint()
+        ..shader = RadialGradient(
+          colors: [
+            o.$3.withOpacity(o.$4),
+            o.$3.withOpacity(0),
+          ],
+        ).createShader(Rect.fromCircle(center: o.$1, radius: o.$2));
+      canvas.drawCircle(o.$1, o.$2, paint);
+    }
+    // Subtle dot grid (logo-style texture)
+    const spacing = 44.0;
+    const dotColor = Color(0xFFB0D4E0);
+    final dotPaint = Paint()..color = dotColor.withOpacity(0.08);
+    for (var x = 0.0; x <= w + spacing; x += spacing) {
+      for (var y = 0.0; y <= h + spacing; y += spacing) {
+        canvas.drawCircle(Offset(x, y), 1.2, dotPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// --- App bar logo placeholder when asset is missing or fails to load ---
+class _MarinaLogoPlaceholder extends StatelessWidget {
+  const _MarinaLogoPlaceholder({required this.narrow});
+
+  final bool narrow;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = narrow ? 48.0 : 58.0;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.35),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white, width: 1.5),
+        ),
+        child: Icon(
+          Icons.storefront_rounded,
+          size: narrow ? 28 : 34,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
@@ -476,14 +558,27 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
   List<Store> get _storesForSelectedBrand =>
       _selectedBrand != null ? storesForBrand(_selectedBrand!.id) : <Store>[];
 
+  /// Transactions whose invoice date falls within the selected period [_fromMs, _toMs].
+  /// Ensures sums (monthly, weekly, day, all) are correct.
+  List<PosTransaction> get _periodFilteredTransactions {
+    final from = _fromMs;
+    final to = _toMs;
+    return _transactions.where((t) {
+      final d = _parseDate(t.invoiceDate);
+      if (d == null) return false;
+      final ms = d.millisecondsSinceEpoch;
+      return ms >= from && ms <= to;
+    }).toList();
+  }
+
   /// 0 = All transactions, 1 = Refunds only
   int _transactionListTab = 0;
 
   List<PosTransaction> get _refundTransactions =>
-      _transactions.where((t) => (t.transactionType ?? '').toUpperCase() == 'REFUND').toList();
+      _periodFilteredTransactions.where((t) => (t.transactionType ?? '').toUpperCase() == 'REFUND').toList();
 
   List<PosTransaction> get _displayedTransactions =>
-      _transactionListTab == 1 ? _refundTransactions : _transactions;
+      _transactionListTab == 1 ? _refundTransactions : _periodFilteredTransactions;
 
   @override
   void initState() {
@@ -556,8 +651,9 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
     for (var c = 0; c < headers.length; c++) {
       sheet.cell(CellIndex.indexByColumnRow(columnIndex: c, rowIndex: 2)).value = TextCellValue(headers[c]);
     }
-    for (var i = 0; i < _transactions.length; i++) {
-      final t = _transactions[i];
+    final filtered = _periodFilteredTransactions;
+    for (var i = 0; i < filtered.length; i++) {
+      final t = filtered[i];
       final row = 3 + i;
       sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: row)).value = TextCellValue(t.invoiceNo?.toString() ?? '');
       sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: row)).value = TextCellValue(t.invoiceDate ?? '');
@@ -584,7 +680,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
       pw.MultiPage(
         header: (ctx) => pw.Padding(
           padding: const pw.EdgeInsets.all(8),
-          child: pw.Text('Elevate Mall · $storeName · $period', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+          child: pw.Text('The Marina Mall · $storeName · $period', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
         ),
         build: (ctx) => [
           pw.Table(
@@ -595,7 +691,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                 children: ['Invoice', 'Date', 'Type', 'Category', 'Qty', 'Net (₹)', 'Tax (₹)']
                     .map((h) => pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text(h, style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)))).toList(),
               ),
-              ..._transactions.map((t) => pw.TableRow(
+              ..._periodFilteredTransactions.map((t) => pw.TableRow(
                 children: [
                   pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text(t.invoiceNo?.toString() ?? '', style: const pw.TextStyle(fontSize: 8))),
                   pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text(t.invoiceDate ?? '', style: const pw.TextStyle(fontSize: 8))),
@@ -618,17 +714,18 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
   }
 
   List<AggregatedInsight> get _aggregatedInsights {
-    if (_transactions.isEmpty) return [];
-    final netTotal = _transactions.fold<double>(
+    final filtered = _periodFilteredTransactions;
+    if (filtered.isEmpty) return [];
+    final netTotal = filtered.fold<double>(
       0, (sum, t) => sum + ((t.netAmount ?? 0).toDouble()),
     );
-    final taxTotal = _transactions.fold<double>(
+    final taxTotal = filtered.fold<double>(
       0, (sum, t) => sum + ((t.totalTaxAmount ?? 0).toDouble()),
     );
-    final saleCount = _transactions.where((t) => t.transactionType == 'SALE').length;
-    final refundCount = _transactions.where((t) => t.transactionType == 'REFUND').length;
+    final saleCount = filtered.where((t) => t.transactionType == 'SALE').length;
+    final refundCount = filtered.where((t) => t.transactionType == 'REFUND').length;
     final byType = <String, int>{};
-    for (final t in _transactions) {
+    for (final t in filtered) {
       final type = t.type ?? 'Other';
       byType[type] = (byType[type] ?? 0) + 1;
     }
@@ -639,7 +736,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
       AggregatedInsight(
         title: 'Total Net Amount',
         value: '₹ ${_formatAmount(netTotal)}',
-        subtitle: '${_transactions.length} line items',
+        subtitle: '${filtered.length} line items',
         icon: Icons.account_balance_outlined,
       ),
       AggregatedInsight(
@@ -675,19 +772,33 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0D1117),
-              Color(0xFF131920),
-              Color(0xFF0D1117),
-            ],
+      body: Stack(
+        children: [
+          // Base gradient
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColors.background,
+                  Color.lerp(AppColors.background, const Color(0xFFE0F0F4), 0.25)!,
+                  AppColors.background,
+                ],
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
+          // Subtle background images: soft orbs + dot texture
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _MallBackgroundPainter(),
+            ),
+          ),
+          // Content
+          SafeArea(
           child: RefreshIndicator(
             onRefresh: _loadTransactions,
             color: AppColors.gold,
@@ -709,7 +820,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                             SliverToBoxAdapter(child: _buildStatsGrid(context)),
                             SliverToBoxAdapter(child: _buildLineCharts(context)),
                             SliverToBoxAdapter(child: _buildSectionHeader(context, 'Transactions · ${_selectedStore!.name} · ${_periodFilter.subtitle}')),
-                            if (_transactions.isEmpty && !_loading)
+                            if (_periodFilteredTransactions.isEmpty && !_loading)
                               SliverToBoxAdapter(child: _buildRichEmptyState(context))
                             else ...[
                               SliverToBoxAdapter(child: _buildTransactionListTabs(context)),
@@ -734,6 +845,28 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                       ),
           ),
         ),
+        ],
+      ),
+    );
+  }
+
+  static const _logoAssetPath = 'images/marina_mall_logo.png';
+
+  Widget _buildAppBarLogo(bool narrow) {
+    final size = narrow ? 48.0 : 58.0;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.asset(
+          _logoAssetPath,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+          gaplessPlayback: true,
+          errorBuilder: (_, Object e, __) => _MarinaLogoPlaceholder(narrow: narrow),
+        ),
       ),
     );
   }
@@ -742,44 +875,46 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
     final narrow = _isNarrow(context);
     return SliverAppBar(
       floating: true,
+      toolbarHeight: narrow ? 64 : 72,
       backgroundColor: Colors.transparent,
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AppColors.appBarStart, AppColors.appBarEnd],
+          ),
+        ),
+      ),
       title: Row(
         children: [
-          Container(
-            padding: EdgeInsets.all(narrow ? 6 : 8),
-            decoration: BoxDecoration(
-              color: AppColors.gold.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.storefront_rounded, color: AppColors.gold, size: narrow ? 20 : 24),
-          ),
-          SizedBox(width: narrow ? 8 : 12),
+          _buildAppBarLogo(narrow),
+          SizedBox(width: narrow ? 10 : 14),
           Expanded(
-            child: Row(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Text(
-                    'Elevate Mall',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: narrow ? 17 : 20,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                      letterSpacing: -0.3,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-                SizedBox(width: narrow ? 4 : 6),
                 Text(
-                  '${kStores.length}+ stores',
+                  'The Marina Mall',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: narrow ? 17 : 20,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.appBarOnSurface,
+                    letterSpacing: -0.3,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                Text(
+                  'EGATTUR, OMR · Store Directory',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: narrow ? 10 : 11,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textMuted,
+                    color: AppColors.appBarOnSurface.withOpacity(0.92),
                   ),
                   overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ],
             ),
@@ -805,7 +940,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
               ? SizedBox(
                   width: 22,
                   height: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.gold),
+                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.appBarOnSurface),
                 )
               : const Icon(Icons.refresh_rounded),
         ),
@@ -817,20 +952,26 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
   Widget _buildBrandSelector(BuildContext context) {
     final hp = _horizontalPadding(context);
     return Padding(
-      padding: EdgeInsets.fromLTRB(hp, 16, hp, 12),
+      padding: EdgeInsets.fromLTRB(hp, 20, hp, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Brand',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textMuted,
-              letterSpacing: 0.5,
-            ),
+          Row(
+            children: [
+              Icon(Icons.explore_rounded, size: 18, color: AppColors.gold),
+              const SizedBox(width: 8),
+              Text(
+                'Explore brands',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           SizedBox(
             height: 52,
             child: ListView.separated(
@@ -944,14 +1085,29 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Store · ${_selectedBrand?.name ?? "—"}',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textMuted,
-              letterSpacing: 0.5,
-            ),
+          Row(
+            children: [
+              Icon(Icons.store_rounded, size: 16, color: AppColors.gold),
+              const SizedBox(width: 6),
+              Text(
+                'Select store',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              if (_selectedBrand != null) ...[
+                Text(
+                  ' · ${_selectedBrand!.name}',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textMuted,
+                  ),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 10),
           SizedBox(
@@ -1020,14 +1176,19 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Period',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textMuted,
-              letterSpacing: 0.5,
-            ),
+          Row(
+            children: [
+              Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.gold),
+              const SizedBox(width: 6),
+              Text(
+                'Report period',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           SizedBox(
@@ -1074,7 +1235,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
           padding: EdgeInsets.symmetric(vertical: 14, horizontal: narrow ? 8 : 12),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.gold.withOpacity(0.2)
+                ? AppColors.goldTint
                 : AppColors.surface.withOpacity(0.8),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -1084,7 +1245,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: AppColors.gold.withOpacity(0.15),
+                      color: AppColors.goldTint,
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -1226,15 +1387,31 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                             maxLines: 1,
                           ),
                           if (store.location != null) ...[
-                            const SizedBox(height: 2),
-                            Text(
-                              store.location!,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 12,
-                                color: AppColors.textSecondary,
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.floorBadge,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.borderLight, width: 0.5),
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.place_rounded, size: 14, color: AppColors.floorBadgeText),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    store.location!,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.floorBadgeText,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ],
@@ -1242,7 +1419,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                     ),
                   ],
                 ),
-                if (_transactions.isNotEmpty) ...[
+                if (_periodFilteredTransactions.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   Container(
                     height: 1,
@@ -1251,24 +1428,25 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                   const SizedBox(height: 16),
                   LayoutBuilder(
                     builder: (context, constraints) {
+                      final fp = _periodFilteredTransactions;
                       if (constraints.maxWidth < 280) {
                         return Wrap(
                           spacing: 16,
                           runSpacing: 12,
                           alignment: WrapAlignment.center,
                           children: [
-                            _buildHeroStat('Line items', '${_transactions.length}', Icons.receipt_long_rounded),
-                            _buildHeroStat('Invoices', '${_transactions.map((t) => t.invoiceNo).toSet().length}', Icons.description_rounded),
-                            _buildHeroStat('Categories', '${_transactions.map((t) => t.type).whereType<String>().toSet().length}', Icons.category_rounded),
+                            _buildHeroStat('Line items', '${fp.length}', Icons.receipt_long_rounded),
+                            _buildHeroStat('Invoices', '${fp.map((t) => t.invoiceNo).toSet().length}', Icons.description_rounded),
+                            _buildHeroStat('Categories', '${fp.map((t) => t.type).whereType<String>().toSet().length}', Icons.category_rounded),
                           ],
                         );
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildHeroStat('Line items', '${_transactions.length}', Icons.receipt_long_rounded),
-                          _buildHeroStat('Invoices', '${_transactions.map((t) => t.invoiceNo).toSet().length}', Icons.description_rounded),
-                          _buildHeroStat('Categories', '${_transactions.map((t) => t.type).whereType<String>().toSet().length}', Icons.category_rounded),
+                          _buildHeroStat('Line items', '${fp.length}', Icons.receipt_long_rounded),
+                          _buildHeroStat('Invoices', '${fp.map((t) => t.invoiceNo).toSet().length}', Icons.description_rounded),
+                          _buildHeroStat('Categories', '${fp.map((t) => t.type).whereType<String>().toSet().length}', Icons.category_rounded),
                         ],
                       );
                     },
@@ -1440,23 +1618,28 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: narrow ? 20 : 28, vertical: 48),
+            padding: EdgeInsets.symmetric(horizontal: narrow ? 20 : 32, vertical: 52),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.surface.withOpacity(0.9),
-                  AppColors.surfaceElevated.withOpacity(0.7),
+                  AppColors.surface,
+                  AppColors.surfaceOverlay,
                 ],
               ),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.border.withOpacity(0.6), width: 0.5),
+              border: Border.all(color: AppColors.borderLight, width: 0.5),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.gold.withOpacity(0.1),
-                  blurRadius: 32,
-                  offset: const Offset(0, 12),
+                  color: AppColors.gold.withOpacity(0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -1466,29 +1649,37 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                 Container(
                   padding: EdgeInsets.all(narrow ? 20 : 28),
                   decoration: BoxDecoration(
-                    color: AppColors.gold.withOpacity(0.12),
+                    color: AppColors.goldTint,
                     shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.gold.withOpacity(0.15),
+                        blurRadius: 20,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
                   ),
                   child: const Icon(
-                    Icons.storefront_rounded,
+                    Icons.local_mall_rounded,
                     size: 56,
                     color: AppColors.gold,
                   ),
                 ),
                 const SizedBox(height: 28),
                 Text(
-                  'Select a store',
+                  'Welcome to The Marina Mall',
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 24,
+                    fontSize: narrow ? 22 : 26,
                     fontWeight: FontWeight.w800,
                     color: AppColors.textPrimary,
                     letterSpacing: -0.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Text(
-                  'Choose a brand above, then pick a store to view transactions and metrics.',
+                  'Select a brand above, then choose a store to view sales, transactions and insights.',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: narrow ? 14 : 15,
                     height: 1.5,
@@ -1496,13 +1687,21 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  '${kBrands.length} brands · ${kStores.length} stores',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted,
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.floorBadge,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.borderLight, width: 0.5),
+                  ),
+                  child: Text(
+                    '${kBrands.length} brands · ${kStores.length} stores in directory',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.floorBadgeText,
+                    ),
                   ),
                 ),
               ],
@@ -1524,7 +1723,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Key metrics',
+            'Store performance',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -1689,11 +1888,11 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
   }
 
   Widget _buildLineCharts(BuildContext context) {
-    if (_transactions.isEmpty) return const SizedBox.shrink();
+    if (_periodFilteredTransactions.isEmpty) return const SizedBox.shrink();
     final hp = _horizontalPadding(context);
     final narrow = _isNarrow(context);
     final byBucket = <DateTime, ({double netAmount, double tax})>{};
-    for (final t in _transactions) {
+    for (final t in _periodFilteredTransactions) {
       final d = _parseDate(t.invoiceDate);
       if (d == null) continue;
       final key = _bucketKey(d);
@@ -1853,7 +2052,7 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
           _buildTransactionTab(
             context: context,
             label: 'All',
-            count: _transactions.length,
+            count: _periodFilteredTransactions.length,
             isSelected: _transactionListTab == 0,
             onTap: () => setState(() => _transactionListTab = 0),
           ),
@@ -1987,12 +2186,13 @@ class _IntelligenceDashboardState extends State<IntelligenceDashboard> {
       child: Row(
         children: [
           Container(
-            width: 4,
-            height: 20,
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppColors.gold,
-              borderRadius: BorderRadius.circular(2),
+              color: AppColors.goldTint,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.gold.withOpacity(0.3), width: 0.5),
             ),
+            child: Icon(Icons.receipt_long_rounded, size: 18, color: AppColors.gold),
           ),
           const SizedBox(width: 12),
           Expanded(
